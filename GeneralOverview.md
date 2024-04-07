@@ -51,6 +51,85 @@ Storing the OS this way provides immediate benefits, such as providing simpler m
 To accomplish this, CBS uses 3 primary kinds of assemblies:
  - Components, which group a set of related files, registry keys, and other items
  - Deployments, which group a set of related components
- - Packages, which group a set of related deployments
+ - Packages, which group a set of related deployments and sub-packages
 
-These assemblies are processed by the various parts that make up CBS for operations like installation, upgrading, and removal. 
+These assemblies are processed by the various parts that make up CBS, known as the servicing stack, for operations like installation, upgrading, and removal, which are collectively referred to as servicing. 
+
+### Components
+
+Components are the most fundamental unit of Windows servicing. They tend to house only a small set of files, and they can also contain extended metadata related to registry changes, permissions, and other installation information that is needed to correctly set up these files.
+
+Example manifest:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v3" manifestVersion="1.0" copyright="Copyright (c) Microsoft Corporation. All Rights Reserved.">
+  <assemblyIdentity name="Microsoft-Windows-VolumeActivation-EventQuery" version="6.2.8250.0" processorArchitecture="amd64" language="neutral" buildType="release" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS" />
+  <file name="VolumeActivation.Events.xml" destinationPath="$(runtime.programData)\Microsoft\Event Viewer\Views\ServerRoles\" sourceName="VolumeActivation.Events.xml" sourcePath=".\" importPath="$(build.nttree)\">
+    <securityDescriptor name="WRP_FILE_DEFAULT_SDDL" />
+    <asmv2:hash xmlns:asmv2="urn:schemas-microsoft-com:asm.v2">
+      <dsig:Transforms xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">UZq+KgtzhkSi0GBqhcE16sHbVjSqibRrRdWaG/KUsmc=</dsig:DigestValue>
+    </asmv2:hash>
+  </file>
+  <trustInfo>
+    <security>
+      <accessControl>
+        <securityDescriptorDefinitions>
+          <securityDescriptorDefinition name="WRP_FILE_DEFAULT_SDDL" sddl="O:S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464G:S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464D:P(A;;FA;;;S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464)(A;;GRGX;;;BA)(A;;GRGX;;;SY)(A;;GRGX;;;BU)(A;;GRGX;;;S-1-15-2-1)S:(AU;FASA;0x000D0116;;;WD)" operationHint="replace" description="Default SDDL for Windows Resource Protected file" />
+        </securityDescriptorDefinitions>
+      </accessControl>
+    </security>
+  </trustInfo>
+</assembly>
+```
+
+### Deployments
+
+Deployments are used to categorize a set of components that must be installed together. Deployments must contain the `deployment` tag, and they reference the contained components as dependencies.
+
+Example manifest:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v3" manifestVersion="1.0" copyright="Copyright (c) Microsoft Corporation. All Rights Reserved.">
+  <assemblyIdentity name="Microsoft-Hyper-V-Management-Client-Interop-Deployment" version="6.2.8250.0" processorArchitecture="amd64" language="neutral" buildType="release" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS" />
+  <dependency discoverable="no">
+    <dependentAssembly dependencyType="install">
+      <assemblyIdentity name="Microsoft.Virtualization.Client.RdpClientAxHost" version="6.2.8250.0" processorArchitecture="msil" language="neutral" buildType="release" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS" />
+    </dependentAssembly>
+  </dependency>
+  <dependency discoverable="no">
+    <dependentAssembly dependencyType="install">
+      <assemblyIdentity name="Microsoft.Virtualization.Client.RdpClientInterop" version="6.2.8250.0" processorArchitecture="msil" language="neutral" buildType="release" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS" />
+    </dependentAssembly>
+  </dependency>
+  <deployment xmlns="urn:schemas-microsoft-com:asm.v3" />
+</assembly>
+```
+
+### Packages
+
+Packages are used to group a set of deployments and packages to deliver a single feature set. Packages must contain the `package` tag, and each included deployment or sub-package is contained within an `update` tag.
+
+Example manifest:
+
+```xml
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v3" copyright="Copyright (c) Microsoft Corporation. All Rights Reserved." manifestVersion="1.0">
+  <assemblyIdentity buildType="release" language="en-US" name="Microsoft-Windows-BusinessScanning-Feature-Package-admin" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" version="6.2.8250.0"/>
+  <package identifier="Microsoft-Windows-BusinessScanning-Feature-Package-admin LP" releaseType="Language Pack">
+    <parent disposition="detect" integrate="separate">
+      <assemblyIdentity buildType="release" language="neutral" name="Microsoft-Windows-BusinessScanning-Feature-Package-admin" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" version="6.2.8250.0"/>
+    </parent>
+    <update description="Wraps admin components depot contributing to Microsoft-Windows-BusinessScanning-Feature-Package-admin" displayName="Microsoft-Windows-BusinessScanning-Feature-Package-admin" name="Microsoft-Windows-BusinessScanning-Feature-Package-admin">
+      <component>
+        <assemblyIdentity buildType="release" language="en-US" name="Microsoft-Windows-BusinessScanning-Feature-Package-admin-deployment-LanguagePack" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" version="6.2.8250.0" versionScope="nonSxS"/>
+      </component>
+    </update>
+  </package>
+</assembly>
+```
