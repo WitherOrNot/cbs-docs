@@ -46,9 +46,9 @@ Additionally, to provide the SxS functionality, manifests specify an `assemblyId
 
 The fundamental idea behind CBS is to extend the SxS system to not only store program libraries, but the parts that make up Windows itself.
 
-Storing the OS this way provides immediate benefits, such as providing simpler methods for system updates and system file corruption detection. It also centralizes and organizes the storage of system files, making them easier to manage for Microsoft and system adminsistrators.
+Storing the OS this way provides immediate benefits, such as providing simpler methods for system updates and system file corruption detection. It also centralizes and organizes the storage of system files, making them easier to manage for Microsoft and system adminsistrators. Due to these benefits, Microsoft introduced CBS with Windows Vista, and it has served as the primary method of managing system files ever since.
 
-To accomplish this, CBS uses 3 primary kinds of assemblies:
+CBS, like SxS, works in terms of assemblies, with only difference being that assemblies are now used to hold system data rather than program libraries. The 3 primary kinds of CBS assemblies are:
  - Components, which group a set of related files, registry keys, and other items
  - Deployments, which group a set of related components
  - Packages, which group a set of related deployments and sub-packages
@@ -113,7 +113,7 @@ Example manifest:
 
 ### Packages
 
-Packages are used to group a set of deployments and packages to deliver a single feature set. Packages must contain the `package` tag, and each included deployment or sub-package is contained within an `update` tag.
+Packages are used to group a set of deployments and packages to deliver a single feature set. Packages must contain the `package` tag, and each included deployment or sub-package is contained within an `update` tag. During servicing, Windows may either install all the updates in a package or select particular updates as needed. Additionally, the package release type is specified by the `releaseType` attribute of the `package` tag. This value affects how CBS chooses to handle requests to install or uninstall packages.
 
 Example manifest:
 
