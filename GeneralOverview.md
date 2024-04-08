@@ -53,11 +53,9 @@ CBS, like SxS, works in terms of assemblies, with only difference being that ass
  - Deployments, which group a set of related components
  - Packages, which group a set of related deployments and sub-packages
 
-These assemblies are processed by the various parts that make up CBS, known as the servicing stack, for operations like installation, upgrading, and removal, which are collectively referred to as servicing. 
-
 ### Components
 
-Components are the most fundamental unit of Windows servicing. They tend to house only a small set of files, and they can also contain extended metadata related to registry changes, permissions, and other installation information that is needed to correctly set up these files.
+Components are the most fundamental unit of Windows servicing. They tend to house only a small set of files, and they can also contain extended metadata related to registry changes, permissions, and other installation information that is needed to correctly set up these files. Components may also specify other components as dependencies.
 
 Example manifest:
 
@@ -113,7 +111,7 @@ Example manifest:
 
 ### Packages
 
-Packages are used to group a set of deployments and packages to deliver a single feature set. Packages must contain the `package` tag, and each included deployment or sub-package is contained within an `update` tag. During servicing, Windows may either install all the updates in a package or select particular updates as needed. Additionally, the package release type is specified by the `releaseType` attribute of the `package` tag. This value affects how CBS chooses to handle requests to install or uninstall packages.
+Packages are used to group a set of deployments and packages to deliver a single feature set. Packages must contain the `package` tag, and each included deployment or sub-package is contained within an `update` tag. During servicing, Windows may either install all the updates in a package or select particular updates as needed. Packages may also specify parent packages with the `parent` tag. If a given package's parent is not available during installation, the given package's installation will fail. Additionally, the package release type is specified by the `releaseType` attribute of the `package` tag. This value affects how CBS chooses to handle requests to install or uninstall packages.
 
 Example manifest:
 
@@ -133,3 +131,21 @@ Example manifest:
   </package>
 </assembly>
 ```
+
+## Servicing Stack
+
+Each type of assembly is processed by the parts that carry out the CBS process, which are collectively known as the servicing stack. In order of highest to lowest level, the servicing stack consists of the following:
+
+ - Trusted Installer (TI), responsible for managing packages
+ - Component Servicing Infrastructure (CSI), responsible for managing deployments and components
+ - Component Management Infrastructure (CMI), responsible for high level component installation
+ - Driver Management and Install (DMI), responsible for driver installation
+ - Systems Management Infrastructure (SMI), responsible for low level component installation
+ - Kernel Transaction Manager (KTM), responsible for managing individual operations
+
+The next chapter will explore each of these parts in detail, as well as how a developer can interact with them.
+
+## Sources
+
+ - [Understanding Component-Based Servicing - Microsoft Community Hub](https://techcommunity.microsoft.com/t5/ask-the-performance-team/understanding-component-based-servicing/ba-p/373012)
+ - [Side-by-side assembly - Wikipedia](https://en.wikipedia.org/wiki/Side-by-side_assembly)
