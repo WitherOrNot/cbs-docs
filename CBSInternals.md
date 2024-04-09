@@ -106,7 +106,7 @@ pPackage2->InitiateChanges(0, CbsState::STATE2, pUIHandler);
 pSession->FinalizeEx(0, &requiredAction);
 ```
 
-The possible values for package states are the same as those for the current and applicable states. `pUIHandler` references an implementation of `ICbsUIHandler`, whose reference implementation can be found [here](https://github.com/WitherOrNot/cbsexploder/blob/319344c0641e6d280e6a592e6f61e07a22d8ff47/cbsexploder/uihandler.cpp). As shown, multiple operations for multiple packages can be queued at once before being executed by `FinalizeEx`. The value of `requiredAction` is `1` if a reboot is required and `0` otherwise.
+The possible values for package states are the same as those for the current and applicable states. `pUIHandler` references an implementation of `ICbsUIHandler`, whose reference implementation can be found [here](https://github.com/WitherOrNot/cbsexploder/blob/319344c0641e6d280e6a592e6f61e07a22d8ff47/cbsexploder/uihandler.cpp). As shown, multiple operations for multiple packages can be queued at once before being executed by `FinalizeEx`. The value of `requiredAction` is set to `1` if a reboot is required and `0` otherwise.
 
 ## Package Management
 
