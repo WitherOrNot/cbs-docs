@@ -18,7 +18,7 @@ The servicing stack is located in and operates on the WinSxS folder, located in 
 
 ### Component Naming Scheme
 
-Component folders in WinSxS use names, known as key forms, based on the `assemblyIdentity` tag in the component manifest. This scheme is as follows:
+Component folders in WinSxS use names, known as key forms, based on the `assemblyIdentity` tag in the component manifest. The naming scheme is as follows:
 
 `<processorArchitecture>_<name>_<publicKeyToken>_<version>_<language>_<pseudokey>`
 
