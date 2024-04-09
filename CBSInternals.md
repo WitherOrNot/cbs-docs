@@ -45,4 +45,4 @@ The most important binaries that are part of the servicing stack are:
 
 In practice, a typical program interacting with CBS only needs to load `CbsCore.dll` for the CBS API and `wdscore.dll` for logging.
 
-## Package Installation
+## Package Management
