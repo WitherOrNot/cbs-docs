@@ -26,9 +26,9 @@ All values except `pseudokey` correspond to an attribute of the `assemblyIdentit
 
 |Attribute|Length|
 |-|-|
-|`culture`|16|
+|`language`|16|
 |`name`|40|
-|`language`|8|
+|`version`|8|
 
 If an attribute value exceeds the prescribed length, truncation is done by computing `k = (length / 2) - 1`, then setting the value to `<first k characters>..<last k characters>`. As an example, the `name` value `Microsoft-Windows-NetworkDiagnosticsFrameworkCore` exceeds the length limit of `40`, so the first and last `(40 / 2) - 1 = 19` characters would be used, truncating to `microsoft-windows-n..osticsframeworkcore`.
 
