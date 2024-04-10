@@ -9,3 +9,5 @@ This repo contains documentation on the Component-Based Servicing (CBS) subsyste
 ## Chapters
 
 For convenience, this documentation has been split into multiple chapters, covering different aspects of CBS.
+1. [General Overview](./GeneralOverview.md)
+2. [CBS Internals](./CBSInternals.md)
