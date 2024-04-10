@@ -79,7 +79,7 @@ pClassFactory->CreateInstance(NULL, __uuidof(ICbsSession), &pSession);
 oSession->Initialize(CbsSessionOption::OPTION, L"Client Name", bootDrive, winDir);
 ```
 
-The list of `CbsSessionOption` values to replace `OPTION` can be found [here](https://github.com/WitherOrNot/cbsexploder/blob/319344c0641e6d280e6a592e6f61e07a22d8ff47/cbsexploder/CbsApi.h#L79). For offline servicing of a disk image or mounted disk, `bootDrive` must specify the path of the Windows installation, and `winDir` must specify the associated `Windows` directory. For online servicing of the local system, both of these values must be `NULL` instead.
+The list of `CbsSessionOption` values to replace `OPTION` can be found [here](https://github.com/WitherOrNot/cbsexploder/blob/319344c0641e6d280e6a592e6f61e07a22d8ff47/cbsexploder/CbsApi.h#L79). For offline servicing of a disk image or mounted disk, `bootDrive` must specify the path of the Windows installation, and `winDir` must specify the associated `Windows` directory. For online servicing of the local system, both of these values must be `NULL` instead. This function also mounts the `COMPONENTS` registry hive, located at `%SystemRoot%\System32\config\COMPONENTS`.
 
 To load a package, the `CreatePackage` function must be used, like so:
 
@@ -108,5 +108,45 @@ pSession->FinalizeEx(0, &requiredAction);
 
 The possible values for package states are the same as those for the current and applicable states. `pUIHandler` references an implementation of `ICbsUIHandler`, whose reference implementation can be found [here](https://github.com/WitherOrNot/cbsexploder/blob/319344c0641e6d280e6a592e6f61e07a22d8ff47/cbsexploder/uihandler.cpp). As shown, multiple operations for multiple packages can be queued at once before being executed by `FinalizeEx`. The value of `requiredAction` is set to `1` if a reboot is required and `0` otherwise.
 
+Additional examples of CBS API usage can be found in the projects [CbsExploder](https://github.com/WitherOrNot/cbsexploder) and [CallCbsCore](https://github.com/seven-mile/CallCbsCore).
+
 ## Package Management
 
+Upon calling `FinalizeEx`, the Trusted Installer begins the process of package installation, which is done in the following stages:
+1. Planning
+2. Resolving
+3. Pre-Staging
+4. Staging
+5. Installing
+
+### Planning
+
+In this stage, the dependency tree of the package is resolved, and the presence of manifests for all dependency packages is checked. If any dependency is missing, the installation fails.
+
+### Resolving
+
+In this stage, the dependency tree is crawled to create a list of all deployments to be installed, then this list is passed to CSI for processing.
+
+### Pre-Staging
+
+In this stage, the component data is added to the registry in `COMPONENTS\DerivedData\Components`. A key named for the key form of the component is created and populated with the following values:
+ - `S256H`, the SHA256 hash of the uncompressed manifest
+ - `identity`, containing expanded assembly identity data
+ - `c!<keyform>`, with `<keyform>` replaced with the component key form
+
+The package catalogs are then copied to `\Windows\WinSxS\Catalogs` and `\Windows\System32\CatRoot\{F750E6C3-38EE-11D1-85E5-00C04FC295EE}`. In the `Catalogs` directory, the catalog filename is changed to the SHA256 hash of the catalog file.
+
+### Staging
+
+In this stage, the component files are copied to `\Windows\WinSxS` in folders named after the component key form. The corresponding registry key for each component is updated to add values named `f!<filename>`, with `<filename>` replaced with the name of each file in the component. The `CF` value of this key is also set to mark the component as staged, as well as which compression is used for the manifest. Finally, deployments is pinned by creating a key for each deployment in `COMPONENTS\CanonicalData\Deployments` named after its key form. This key is populated with the following values:
+
+ - `appid`, containing expanded deployment assembly identity data
+ - `CatalogThumbprint`, containing the SHA256 hash of the uncompressed deployment manifest
+ - `p!<packagekeyform>`, with `<packagekeyform>` replaced with a keyform for the package
+ - `s!<packagekeyform>`, set to signal that the deployment is staged
+
+At this stage, a valid CBS state has been reached, and the session may end depending on whether the package was requested to be staged or installed. Packages that are staged may resume the install process upon a future request to install the package.
+
+### Installing
+
+This stage is handled by 3 main parts of the servicing stack: Primitive Installers, Midground Installers, and Advanced Installers.
