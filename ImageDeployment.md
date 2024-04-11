@@ -88,7 +88,7 @@ For Windows 7 up through early Windows 10, certain modifications to the foundati
 
 First, non-package legacy catalogs must be copied to `\Windows\System32\CatRoot\{F750E6C3-38EE-11D1-85E5-00C04FC295EE}`, so that they are included in the catalog database. Without these catalogs present, older Windows versions may fail to boot due to system files lacking an available signature.
 
-Then, for Windows 8 through Windows 10 1511, [fingerprinting data](https://betawiki.net/wiki/Leak_prevention_in_Microsoft_Windows) must be added to the registry at `HKLM\SYSTEM\WPA\478C035F-04BC-48C7-B324-2462D786DAD7-5P-9` and to the filesystem at `\Windows\System32\config`. Without this data present, Windows may fail to boot or crash during usage with the stop code `KERNEL_SECURITY_CHECK_FAILURE` or `CRITICAL_STRUCTURE_CORRUPTION`.
+Then, for Windows 8 through Windows 10 1511, [fingerprinting data](https://betawiki.net/wiki/Leak_prevention_in_Microsoft_Windows) must be added to the registry at `HKLM\SYSTEM\WPA\478C035F-04BC-48C7-B324-2462D786DAD7-5P-9` and to the filesystem at `\Windows\System32\config\FP`. Without this data present, Windows may fail to boot or crash during usage with the stop code `KERNEL_SECURITY_CHECK_FAILURE` or `CRITICAL_STRUCTURE_CORRUPTION`.
 
 ### DISM Installation
 
