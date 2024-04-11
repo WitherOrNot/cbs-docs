@@ -108,6 +108,8 @@ pSession->FinalizeEx(0, &requiredAction);
 
 The possible values for package states are the same as those for the current and applicable states. `pUIHandler` references an implementation of `ICbsUIHandler`, whose reference implementation can be found [here](https://github.com/WitherOrNot/cbsexploder/blob/319344c0641e6d280e6a592e6f61e07a22d8ff47/cbsexploder/uihandler.cpp). As shown, multiple operations for multiple packages can be queued at once before being executed by `FinalizeEx`. The value of `requiredAction` is set to `1` if a reboot is required and `0` otherwise.
 
+Once a session successfully finalizes, a list of all operations that occurred in the session is appended to `\Windows\servicing\Sessions\sessions.xml` and saved by itself to `\Windows\servicing\Sessions\<SessID>.xml`, with `<SessID>` replaced with the session ID.
+
 Additional examples of CBS API usage can be found in the projects [CbsExploder](https://github.com/WitherOrNot/cbsexploder) and [CallCbsCore](https://github.com/seven-mile/CallCbsCore).
 
 ## Package Management
@@ -158,6 +160,20 @@ Primitive installers generate filesystem and registry contents based on data spe
 #### Advanced Installers
 
 Advanced installers provide higher-level setup capabilities, allowing for operations like creation of services, scheduled tasks, and installed program entries without needing to manually specify all of the of the registry and file manipulations involved. This is through CSI and CMI, which use DLLs from servicing stack components to carry out the installation process. CSI also loads Advanced Installers to execute the Midground Installer, which provides more generic Advanced Installer capabilities for items like services, disk volumes, and networking.
+
+### Finalization
+
+If any operations are marked as pending, meaning they must be completed in a future session, the list of pending operations is written to `\Windows\WinSxS\pending.xml`. If any errors are raised during driver installation or operations on critical components, the value `Unserviceable` is set in `SOFTWARE\Microsoft\Windows\Component Based Servicing`. This causes future sessions to immediately exit with an error upon attempting servicing operations.
+
+Once a component is installed, if its manifest contains a `migration` tag, signalling that the component stores user-modifiable data to be kept during upgrades, the manifest filename is stored in `\Windows\WinSxS\migration.xml`. An associated key for the component is also created under `SOFTWARE\Microsoft\Windows\SideBySide\Winners`.
+
+Once a package is installed, the relevant deployment keys in `COMPONENTS\CanonicalData\Deployments` are updated to add the value `i!<packagekeyform>` similar to in staging, indicating that the package is installed. Finally, the package is committed to the package store by copying the package manifests and catalogs to `\Windows\servicing\Packages`, and the keys under `SOFTWARE\Microsoft\Windows\Component Based Servicing` are updated as follows:
+
+ - `Packages`, a key named as the package's identity string is created. If the package is a dependency of another package, the depending packages are listed as values in the sub-key `Owners`
+ - `PackageIndex`, a key named as the package's identity string is created, except the version is set to `0.0.0.0`. A value is created under this key with the identity string of the latest version of the package
+ - `PackagesPending`, identical to `Packages` but for packages that will be installed in pending operations
+ - `SessionsPending`, a key named as the session ID is added
+ - `PackageDetect`, `UpdateDetect`, `ComponentDetect`, respective keys added for dependencies that are marked as detectable in their manifests
 
 ## Sources
 
