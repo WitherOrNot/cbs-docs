@@ -161,18 +161,24 @@ Primitive installers generate filesystem and registry contents based on data spe
 
 Advanced installers provide higher-level setup capabilities, allowing for operations like creation of services, scheduled tasks, and installed program entries without needing to manually specify all of the of the registry and file manipulations involved. This is through CSI and CMI, which use DLLs from servicing stack components to carry out the installation process. CSI also loads Advanced Installers to execute the Midground Installer, which provides more generic Advanced Installer capabilities for items like services, disk volumes, and networking for categories of components rather than individual components.
 
-### Finalization
-
-If any operations are marked as pending, meaning they must be completed in a future session, the list of pending operations is written to `\Windows\WinSxS\pending.xml`. If any errors are raised during driver installation or operations on critical components, the value `Unserviceable` is set in `SOFTWARE\Microsoft\Windows\Component Based Servicing`. This causes future sessions to immediately exit with an error upon attempting servicing operations.
+#### Installation Finalization
 
 Once a component is installed, if its manifest contains a `migration` tag, signalling that the component stores user-modifiable data to be kept during upgrades, the manifest filename is stored in `\Windows\WinSxS\migration.xml`. An associated key for the component is also created under `SOFTWARE\Microsoft\Windows\SideBySide\Winners`.
 
-Once a package is installed, the relevant deployment keys in `COMPONENTS\CanonicalData\Deployments` are updated to add the value `i!<packagekeyform>` similar to in staging, indicating that the deployment is installed. Finally, the package is committed to the package store by copying the package manifests and catalogs to `\Windows\servicing\Packages`, and the keys under `SOFTWARE\Microsoft\Windows\Component Based Servicing` are updated as follows:
+Once a package is installed, the relevant deployment keys in `COMPONENTS\CanonicalData\Deployments` are updated to add the value `i!<packagekeyform>` similar to in staging, indicating that the deployment is installed.
 
- - `Packages`, a key named as the package's identity string is created. If the package is a dependency of another package, the depending packages are listed as values in the sub-key `Owners`
+### Session Finalization
+
+The following operations occur after both staging and installation.
+
+If any operations are marked as pending, meaning they must be completed in a future session, the list of pending operations is written to `\Windows\WinSxS\pending.xml`. If any errors are raised during driver installation or operations on critical components, the value `Unserviceable` is set in `SOFTWARE\Microsoft\Windows\Component Based Servicing`. This causes future sessions to immediately exit with an error upon attempting servicing operations.
+
+Finally, packages are committed to the package store by copying the package manifests and catalogs to `\Windows\servicing\Packages`, and the keys under `SOFTWARE\Microsoft\Windows\Component Based Servicing` are updated as follows:
+
+ - `Packages`, a key named for each package's identity string is created. If the package is a dependency of another package, the depending packages are listed as values in the sub-key `Owners`
  - `PackageIndex`, a key named as the package's identity string is created, except the version is set to `0.0.0.0`. A value is created under this key with the identity string of the latest version of the package
- - `PackagesPending`, identical to `Packages` but for packages that will be installed in pending operations
  - `SessionsPending`, a key named as the session ID is added
+ - `PackagesPending`, identical to `Packages` but for packages that will be installed in pending operations
  - `PackageDetect`, `UpdateDetect`, `ComponentDetect`, respective keys added for dependencies that are marked as detectable in their manifests
 
 ## Sources
