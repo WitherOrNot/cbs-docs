@@ -79,7 +79,7 @@ pClassFactory->CreateInstance(NULL, __uuidof(ICbsSession), &pSession);
 oSession->Initialize(CbsSessionOption::OPTION, L"Client Name", bootDrive, winDir);
 ```
 
-The list of `CbsSessionOption` values to replace `OPTION` can be found [here](https://github.com/WitherOrNot/cbsexploder/blob/319344c0641e6d280e6a592e6f61e07a22d8ff47/cbsexploder/CbsApi.h#L79). For offline servicing of a disk image or mounted disk, `bootDrive` must specify the path of the Windows installation, and `winDir` must specify the associated `Windows` directory. For online servicing of the local system, both of these values must be `NULL` instead. This function also mounts the `COMPONENTS` registry hive, located at `%SystemRoot%\System32\config\COMPONENTS`.
+The list of `CbsSessionOption` values to replace `OPTION` can be found [here](https://github.com/WitherOrNot/cbsexploder/blob/319344c0641e6d280e6a592e6f61e07a22d8ff47/cbsexploder/CbsApi.h#L79). For offline servicing of a disk image or mounted disk, `bootDrive` must specify the path of the Windows installation, and `winDir` must specify the associated `Windows` directory. For online servicing of the local system, both of these values must be `NULL` instead. This function also mounts the `COMPONENTS` registry hive, located at `\Windows\System32\config\COMPONENTS`.
 
 To load a package, the `CreatePackage` function must be used, like so:
 
@@ -149,4 +149,12 @@ At this stage, a valid CBS state has been reached, and the session may end depen
 
 ### Installing
 
-This stage is handled by 3 main parts of the servicing stack: Primitive Installers, Midground Installers, and Advanced Installers.
+This stage is handled by 2 main parts of the servicing stack: Primitive Installers and Advanced Installers.
+
+#### Primitive Installers
+
+Primitive installers generate filesystem and registry contents based on data specified in component manifests. Files are projected from the WinSxS folder to the external filesystem using [hard links](https://learn.microsoft.com/en-us/windows/win32/fileio/hard-links-and-junctions), which allow the same file data to be referenced by multiple paths. As a side effect, file size measurements double-count sizes for files hardlinked to 2 locations, causing system files to appear to use more disk space than they actually use. Registry data is applied through standard registry writes. Permissions are also set based on SDDL-encoded permission data in manifests.
+
+#### Advanced Installers
+
+Advanced installers provide higher-level setup capabilities, allowing for operations like creation of services, scheduled tasks, and installed program entries without needing to manually specify all of the of the registry and file manipulations involved. This is through CSI and CMI, which use DLLs from servicing stack components to carry out the installation process. CSI also loads Advanced Installers to execute the Midground Installer, which provides more generic Advanced Installer capabilities for items like services, disk volumes, and networking.
