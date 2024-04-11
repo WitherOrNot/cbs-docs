@@ -46,7 +46,7 @@ Additionally, to provide the SxS functionality, manifests specify an `assemblyId
 
 The fundamental idea behind CBS is to extend the SxS system to not only store program libraries, but the parts that make up Windows itself.
 
-Storing the OS this way provides immediate benefits, such as providing simpler methods for system updates and system file corruption detection. It also centralizes and organizes the storage of system files, making them easier to manage for Microsoft and system adminsistrators. Due to these benefits, Microsoft introduced CBS with Windows Vista, and it has served as the primary method of managing system files ever since.
+Storing the OS this way provides immediate benefits, such as providing simpler methods for system updates and system file corruption detection. It also centralizes and organizes the storage of system files, making them easier to manage for Microsoft and system administrators. Due to these benefits, Microsoft introduced CBS with Windows Vista, and it has served as the primary method of managing system files ever since.
 
 CBS, like SxS, works in terms of assemblies, with only difference being that assemblies are now used to hold system data rather than program libraries. The 3 primary kinds of CBS assemblies are:
  - Components, which group a set of related files, registry keys, and other items
