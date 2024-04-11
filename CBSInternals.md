@@ -158,3 +158,9 @@ Primitive installers generate filesystem and registry contents based on data spe
 #### Advanced Installers
 
 Advanced installers provide higher-level setup capabilities, allowing for operations like creation of services, scheduled tasks, and installed program entries without needing to manually specify all of the of the registry and file manipulations involved. This is through CSI and CMI, which use DLLs from servicing stack components to carry out the installation process. CSI also loads Advanced Installers to execute the Midground Installer, which provides more generic Advanced Installer capabilities for items like services, disk volumes, and networking.
+
+## Sources
+
+ - [haveSxS - asdcorp](https://github.com/asdcorp/haveSxS)
+ - [CallCbsCore - seven-mile](https://github.com/seven-mile/CallCbsCore)
+ - [How to address disk space issues that are caused by a large Windows component store (WinSxS) directory - Microsoft Learn](https://learn.microsoft.com/en-us/troubleshoot/windows-client/installing-updates-features-roles/address-disk-space-issues-caused-by-winsxs)
