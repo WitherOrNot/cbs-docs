@@ -78,7 +78,7 @@ Features on Demand (FoD), a system introduced in Windows 8, allow for system fea
 
 Staged images are the most common form of Windows installation image, where each edition is installed directly to a separate sub-image.
 
-Prior to late versions of Windows 10, this installation was done with DISM. From late Windows 10 onwards, this installation was done with CBSS, an internal fork of Vista's PkgMgr. Thanks to leaks from internal test updates, CBSS is [publicly available](https://archive.org/download/windows-10.0-kb-9999999-x-64).
+Prior to Windows 10 1903, this installation was done with DISM. From late Windows 10 onwards, this installation was done with CBSS, an internal fork of Vista's PkgMgr. Thanks to leaks from internal test updates, CBSS is [publicly available](https://archive.org/download/windows-10.0-kb-9999999-x-64).
 
 Since it is unclear from available data whether the DISM API or command-line tool was used, DISM commands will be used to represent operations done with DISM for convenience.
 
@@ -197,7 +197,6 @@ Note that only files related to the dependencies of edition packages are present
 For setup to be configured for installing an unstaged image, the appropriate metadata must be set in `install.wim`:
  - `FLAGS` must be set to `Windows Foundation`
  - `DESCRIPTION` must end with the string `EDITIONS:` followed by a comma-separated list of available editions (ex. `EDITIONS:CORE,PROFESSIONAL,ENTERPRISE`)
- - `CREATIONTIME/HIGHPART`, `CREATIONTIME/LOWPART`, `LASTMODIFICATIONTIME/HIGHPART`, `LASTMODIFICATIONTIME/LOWPART` must be present and have values
 
 These values can be set using [wimlib](https://wimlib.net).
 
