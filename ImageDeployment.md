@@ -202,7 +202,7 @@ These values can be set using [wimlib](https://wimlib.net).
 
 ### Language Packs
 
-Since language packs are not installed in the image, they are instead packaged into cabinet files and stored in the setup ISO. Prior to cabinet compression, the package manifest for the language pack must be named `update.mum`, and the associated catalog file must be named `update.cat`. Then, the language pack is saved in `langpacs/<language code>/lp.cab` in the setup ISO.
+Since language packs are not installed in the image, they are instead packaged into cabinet files and stored in the setup ISO. Prior to cabinet compression, the package manifest for the language pack must be named `update.mum`, and the associated catalog file must be named `update.cat`. Then, the language pack is saved in `langpacks/<language code>/lp.cab` in the setup ISO.
 
 To support installation of language packs from the ISO, the file `sources\lang.ini` must be updated in both the ISO and in `sources\boot.wim` within the ISO. In this file, under the section `[Available Languages]` the flag for each language must be set to `1`. Example contents:
 
