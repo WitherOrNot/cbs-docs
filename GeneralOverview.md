@@ -38,7 +38,7 @@ To accomplish this, libraries, known as assemblies, are accompanied by an associ
 </assembly>
 ```
 
-As shown, manifests are able to describe assembly dependencies, file integrity information, and installation information in a readable format. To prevent corruption or malicious modification of these manifests, they are store alongside signed catalog files containing their hashes.
+As shown, manifests are able to describe assembly dependencies, file integrity information, and installation information in a readable format. To prevent corruption or malicious modification of these manifests, they are stored alongside signed catalog files containing their hashes.
 
 Additionally, to provide the SxS functionality, manifests specify an `assemblyIdentity` tag that uniquely identifies a particular assembly, specifying its name, version, architecture, signing key, and runtime. This information is then specified by programs in their own manifests (usually located within the binary) to load a particular version of a library. The information in this tag is also used in the manifest naming system, which will be covered in a later chapter.
 
