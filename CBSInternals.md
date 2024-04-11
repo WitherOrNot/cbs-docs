@@ -167,7 +167,7 @@ If any operations are marked as pending, meaning they must be completed in a fut
 
 Once a component is installed, if its manifest contains a `migration` tag, signalling that the component stores user-modifiable data to be kept during upgrades, the manifest filename is stored in `\Windows\WinSxS\migration.xml`. An associated key for the component is also created under `SOFTWARE\Microsoft\Windows\SideBySide\Winners`.
 
-Once a package is installed, the relevant deployment keys in `COMPONENTS\CanonicalData\Deployments` are updated to add the value `i!<packagekeyform>` similar to in staging, indicating that the package is installed. Finally, the package is committed to the package store by copying the package manifests and catalogs to `\Windows\servicing\Packages`, and the keys under `SOFTWARE\Microsoft\Windows\Component Based Servicing` are updated as follows:
+Once a package is installed, the relevant deployment keys in `COMPONENTS\CanonicalData\Deployments` are updated to add the value `i!<packagekeyform>` similar to in staging, indicating that the deployment is installed. Finally, the package is committed to the package store by copying the package manifests and catalogs to `\Windows\servicing\Packages`, and the keys under `SOFTWARE\Microsoft\Windows\Component Based Servicing` are updated as follows:
 
  - `Packages`, a key named as the package's identity string is created. If the package is a dependency of another package, the depending packages are listed as values in the sub-key `Owners`
  - `PackageIndex`, a key named as the package's identity string is created, except the version is set to `0.0.0.0`. A value is created under this key with the identity string of the latest version of the package
