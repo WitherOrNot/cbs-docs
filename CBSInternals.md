@@ -159,7 +159,7 @@ Primitive installers generate filesystem and registry contents based on data spe
 
 #### Advanced Installers
 
-Advanced installers provide higher-level setup capabilities, allowing for operations like creation of services, scheduled tasks, and installed program entries without needing to manually specify all of the of the registry and file manipulations involved. This is through CSI and CMI, which use DLLs from servicing stack components to carry out the installation process. CSI also loads Advanced Installers to execute the Midground Installer, which provides more generic Advanced Installer capabilities for items like services, disk volumes, and networking.
+Advanced installers provide higher-level setup capabilities, allowing for operations like creation of services, scheduled tasks, and installed program entries without needing to manually specify all of the of the registry and file manipulations involved. This is through CSI and CMI, which use DLLs from servicing stack components to carry out the installation process. CSI also loads Advanced Installers to execute the Midground Installer, which provides more generic Advanced Installer capabilities for items like services, disk volumes, and networking for categories of components rather than individual components.
 
 ### Finalization
 
