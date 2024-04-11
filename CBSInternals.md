@@ -140,7 +140,7 @@ The package catalogs are then copied to `\Windows\WinSxS\Catalogs` and `\Windows
 
 ### Staging
 
-In this stage, the component files are copied to `\Windows\WinSxS` in folders named after the component key form. The corresponding registry key for each component is updated to add values named `f!<filename>`, with `<filename>` replaced with the name of each file in the component. The `CF` value of this key is also set to mark the component as staged, as well as which compression is used for the manifest. Finally, deployments is pinned by creating a key for each deployment in `COMPONENTS\CanonicalData\Deployments` named after its key form. This key is populated with the following values:
+In this stage, the component files are copied to `\Windows\WinSxS` in folders named after the component key form. The corresponding registry key for each component is updated to add values named `f!<filename>`, with `<filename>` replaced with the name of each file in the component. The `CF` value of this key is also set to mark the component as staged, as well as which compression is used for the manifest. Finally, deployments are pinned by creating a key for each deployment in `COMPONENTS\CanonicalData\Deployments` named after its key form. This key is populated with the following values:
 
  - `appid`, containing expanded deployment assembly identity data
  - `CatalogThumbprint`, containing the SHA256 hash of the uncompressed deployment manifest
