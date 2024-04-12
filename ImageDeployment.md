@@ -177,6 +177,8 @@ The following registry modifications must also be made:
  - `SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\ImageServicingData!ImageState` set to `IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE` (`REG_SZ`)
  - `SYSTEM\Setup\Status\SysprepStatus!GeneralizationState` set to `4` (`REG_DWORD`)
 
+The open-source project [explodeSxS](https://github.com/asdcorp/explodeSxS) provides an implementation of the staged image deployment process.
+
 ## Unstaged Image Deployment
 
 Rarely, some versions of Windows are shipped unstaged, meaning that no particular edition package is installed in the installation image and the foundation package is deployed without being marked as installed. Instead, the full list of editions built at compile time are available to choose from during initial setup, either in an interactive menu or by entering an appropriate product key. Then, setup will manually install the edition package and language pack during offline image deployment. Some examples of known unstaged builds are checked builds of Windows 7, [Windows 10 build 14357.1000](https://betawiki.net/wiki/Windows_10_build_14357.1000), and [Windows Server 2016 build 10586 (th2_srv1_nano_dev2)](https://betawiki.net/wiki/Windows_Server_2016_build_10586_(th2_srv1_nano_dev2)).
