@@ -165,7 +165,7 @@ This updates the offline image's registry values in the following locations:
 
 ### Sysprep
 
-In Windows versions serviced with CBSS, the Sysprep generalization state must be added after servicing. This is done by creating the file `\Windows\Setup\State\State.ini` with the following contents:
+In newer Windows versions, the Sysprep generalization state must be added after servicing. This is done by creating the file `\Windows\Setup\State\State.ini` with the following contents:
 
 ```
 [State]
