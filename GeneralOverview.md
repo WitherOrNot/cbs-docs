@@ -51,7 +51,7 @@ Storing the OS this way provides immediate benefits, such as providing simpler m
 CBS, like SxS, works in terms of assemblies, with only difference being that assemblies are now used to hold system data rather than program libraries. The 3 primary kinds of CBS assemblies are:
  - Components, which group a set of related files, registry keys, and other items
  - Deployments, which group a set of related components
- - Packages, which group a set of related deployments and sub-packages
+ - Packages, which group a set of related components, deployments, and sub-packages
 
 ### Components
 
@@ -111,7 +111,7 @@ Example manifest:
 
 ### Packages
 
-Packages are used to group a set of deployments and packages to deliver a single feature set. Packages must contain the `package` tag, and each included deployment or sub-package is contained within an `update` tag. During servicing, Windows may either install all the updates in a package or select particular updates as needed. Packages may also specify parent packages with the `parent` tag. If a given package's parent is not available during installation, the given package's installation will fail. Additionally, the package release type is specified by the `releaseType` attribute of the `package` tag. This value affects how CBS chooses to handle requests to install or uninstall packages.
+Packages are used to group a set of components, deployments, and packages to deliver a single feature set. Packages must contain the `package` tag, and each included deployment or sub-package is contained within an `update` tag. During servicing, Windows may either install all the updates in a package or select particular updates as needed. Packages may also specify parent packages with the `parent` tag. If a given package's parent is not available during installation, the given package's installation will fail. Additionally, the package release type is specified by the `releaseType` attribute of the `package` tag. This value affects how CBS chooses to handle requests to install or uninstall packages.
 
 Example manifest:
 
