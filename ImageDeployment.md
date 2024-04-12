@@ -105,12 +105,12 @@ The contents of the unattend file specify to install the target edition and stag
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
     <servicing>
         <package action="install">
-            <assemblyIdentity name="Microsoft-Windows-ProfessionalEdition" version="10.0.22000.1" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" />
-            <source location="packages\Microsoft-Windows-ProfessionalEdition~31bf3856ad364e35~amd64~~10.0.22000.1.mum" />
+            <assemblyIdentity name="Microsoft-Windows-CoreEdition" version="10.0.22000.1" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" />
+            <source location="packages\Microsoft-Windows-CoreEdition~31bf3856ad364e35~amd64~~10.0.22000.1.mum" />
         </package>
         <package action="stage">
-            <assemblyIdentity name="Microsoft-Windows-EnterpriseEdition" version="10.0.22000.1" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" />
-            <source location="packages\Microsoft-Windows-EnterpriseEdition~31bf3856ad364e35~amd64~~10.0.22000.1.mum" />
+            <assemblyIdentity name="Microsoft-Windows-ProfessionalEdition" version="10.0.22000.1" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" />
+            <source location="packages\Microsoft-Windows-ProfessionalEdition~31bf3856ad364e35~amd64~~10.0.22000.1.mum" />
         </package>
         ...
     </servicing>
@@ -128,8 +128,8 @@ cbss [/ls] /o:<Offline Image Windows Directory> /b:<Path to Batch File>
 The contents of the batch file are similar to a DISM unattend file, also specifying installation of the target edition and staging all available upgrades. Example:
 
 ```
-/ip /m:packages\Microsoft-Windows-ProfessionalEdition~31bf3856ad364e35~amd64~~10.0.22000.1.mum
-/sp /m:packages\Microsoft-Windows-EnterpriseEdition~31bf3856ad364e35~amd64~~10.0.22000.1.mum
+/ip /m:packages\Microsoft-Windows-CoreEdition~31bf3856ad364e35~amd64~~10.0.22000.1.mum
+/sp /m:packages\Microsoft-Windows-ProfessionalEdition~31bf3856ad364e35~amd64~~10.0.22000.1.mum
 ...
 ```
 
