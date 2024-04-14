@@ -163,7 +163,7 @@ Advanced installers provide higher-level setup capabilities, allowing for operat
 
 #### Installation Finalization
 
-Once a component is installed, if its manifest contains a `migration` tag, signalling that the component stores user-modifiable data to be kept during upgrades, the manifest filename is stored in `\Windows\WinSxS\migration.xml`. An associated key for the component is also created under `SOFTWARE\Microsoft\Windows\SideBySide\Winners`.
+Once a component is installed, if its manifest contains a `migration` tag, signalling that the component stores user-modifiable data to be kept during upgrades, the manifest filename is stored in `\Windows\WinSxS\migration.xml`. An associated key for the component is also created under `SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners`.
 
 Once a package is installed, the relevant deployment keys in `COMPONENTS\CanonicalData\Deployments` are updated to add the value `i!<packagekeyform>` similar to in staging, indicating that the deployment is installed.
 
@@ -171,9 +171,9 @@ Once a package is installed, the relevant deployment keys in `COMPONENTS\Canonic
 
 The following operations occur after both staging and installation.
 
-If any operations are marked as pending, meaning they must be completed in a future session, the list of pending operations is written to `\Windows\WinSxS\pending.xml`. If any errors are raised during driver installation or operations on critical components, the value `Unserviceable` is set in `SOFTWARE\Microsoft\Windows\Component Based Servicing`. This causes future sessions to immediately exit with an error upon attempting servicing operations.
+If any operations are marked as pending, meaning they must be completed in a future session, the list of pending operations is written to `\Windows\WinSxS\pending.xml`. If any errors are raised during driver installation or operations on critical components, the value `Unserviceable` is set in `SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing`. This causes future sessions to immediately exit with an error upon attempting servicing operations.
 
-Finally, packages are committed to the package store by copying the package manifests and catalogs to `\Windows\servicing\Packages`, and the keys under `SOFTWARE\Microsoft\Windows\Component Based Servicing` are updated as follows:
+Finally, packages are committed to the package store by copying the package manifests and catalogs to `\Windows\servicing\Packages`, and the keys under `SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing` are updated as follows:
 
  - `Packages`, a key named for each package's identity string is created. If the package is a dependency of another package, the depending packages are listed as values in the sub-key `Owners`
  - `PackageIndex`, a key named as the package's identity string is created, except the version is set to `0.0.0.0`. A value is created under this key with the identity string of the latest version of the package
