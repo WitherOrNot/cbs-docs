@@ -59,7 +59,7 @@ typedef int (__stdcall FUNC_INT*)(int);
 typedef void (FUNC_VOID*)(void);
 
 HRESULT WINAPI CbsCoreInitialize(
-    IMalloc* pMlloc,
+    IMalloc* pMalloc,
     FUNC_INT* TiLockProcess,
     FUNC_VOID* TiUnlockProcess,
     FUNC_VOID* InstanceCreated,
